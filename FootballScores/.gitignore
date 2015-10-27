@@ -1,0 +1,13 @@
+### Android Studio ###
+.DS_Store
+.gradle
+/.idea
+/FootballScores.iml
+/build
+/local.properties
+
+### Emacs ###
+*~
+.*~
+.\#*
+\#*
