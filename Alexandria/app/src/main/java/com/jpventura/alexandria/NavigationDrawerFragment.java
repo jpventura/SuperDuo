@@ -43,6 +43,15 @@ import android.widget.ListView;
  * design guidelines</a> for a complete explanation of the behaviors implemented here.
  */
 public class NavigationDrawerFragment extends Fragment {
+    /**
+     * Callbacks interface that all activities using this fragment must implement.
+     */
+    public interface NavigationDrawerCallbacks {
+        /**
+         * Called when an item in the navigation drawer is selected.
+         */
+        void onNavigationDrawerItemSelected(int position);
+    }
 
     /**
      * Remember the position of the selected item.
@@ -116,7 +125,7 @@ public class NavigationDrawerFragment extends Fragment {
                 selectItem(position);
             }
         });
-        mDrawerListView.setAdapter(new ArrayAdapter<String>(
+        mDrawerListView.setAdapter(new ArrayAdapter<>(
                 getActionBar().getThemedContext(),
                 android.R.layout.simple_list_item_activated_1,
                 android.R.id.text1,
@@ -283,15 +292,5 @@ public class NavigationDrawerFragment extends Fragment {
 
     private ActionBar getActionBar() {
         return ((ActionBarActivity) getActivity()).getSupportActionBar();
-    }
-
-    /**
-     * Callbacks interface that all activities using this fragment must implement.
-     */
-    public static interface NavigationDrawerCallbacks {
-        /**
-         * Called when an item in the navigation drawer is selected.
-         */
-        void onNavigationDrawerItemSelected(int position);
     }
 }

@@ -37,7 +37,6 @@ import com.jpventura.alexandria.data.AlexandriaContract;
 import com.jpventura.alexandria.services.BookService;
 import com.jpventura.alexandria.services.DownloadImage;
 
-
 public class BookDetail extends Fragment implements LoaderManager.LoaderCallbacks<Cursor> {
 
     public static final String EAN_KEY = "EAN";
