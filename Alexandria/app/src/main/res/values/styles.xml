@@ -1,8 +1,28 @@
 <resources>
-
-    <!-- Base application theme. -->
-    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
-        <!-- Customize your theme here. -->
+    <style name="Base.Theme.Alexandria" parent="Theme.AppCompat.NoActionBar">
+        <item name="colorAccent">@color/accent</item>
+        <item name="colorControlHighlight">@color/control_highlight</item>
+        <item name="colorPrimary">@color/primary</item>
+        <item name="colorPrimaryDark">@color/primary_dark</item>
     </style>
 
+    <style name="Theme.Alexandria" parent="Base.Theme.Alexandria">
+        <item name="toolbarStyle">@style/Widget.Alexandria.Toolbar</item>
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+    </style>
+
+    <style name="Theme.Alexandria.Preferences" parent="Base.Theme.Alexandria">
+        <item name="toolbarStyle">@style/Widget.Alexandria.Toolbar</item>
+    </style>
+
+    <style name="ThemeOverlay.Alexandria.Dark.ActionBar" parent="ThemeOverlay.AppCompat.Dark.ActionBar">
+        <item name="android:textColor">@color/text</item>
+    </style>
+
+    <style name="Widget.Alexandria.Toolbar" parent="Theme.AppCompat.NoActionBar">
+        <item name="android:background">?attr/colorPrimary</item>
+        <item name="android:minHeight">?attr/actionBarSize</item>
+        <item name="android:textColor">@android:color/white</item>
+    </style>
 </resources>

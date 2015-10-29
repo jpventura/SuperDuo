@@ -19,38 +19,55 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
+import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.content.LocalBroadcastManager;
+import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
-import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.support.design.widget.NavigationView.OnNavigationItemSelectedListener;
 import android.widget.Toast;
 
 import com.jpventura.alexandria.api.Callback;
 
-public class MainActivity extends ActionBarActivity
-        implements NavigationDrawerFragment.NavigationDrawerCallbacks, Callback {
+public class MainActivity extends AppCompatActivity
+        implements Callback, OnNavigationItemSelectedListener {
+    /**
+     * Remember the position of the selected item.
+     */
+    private static final String STATE_SELECTED_POSITION = "selected_navigation_drawer_position";
 
     /**
-     * Fragment managing the behaviors, interactions and presentation of the navigation drawer.
+     * Per the design guidelines, you should show the drawer on launch until the user manually
+     * expands it. This shared preference tracks this.
      */
-    private NavigationDrawerFragment navigationDrawerFragment;
+    private static final String PREF_USER_LEARNED_DRAWER = "navigation_drawer_learned";
 
     /**
-     * Used to store the last screen title. For use in {@link #restoreActionBar()}.
+     * View managing the behaviors, interactions and presentation of the navigation drawer.
      */
-    private CharSequence title;
+    private NavigationView navigationView;
+
     public static boolean IS_TABLET = false;
     private BroadcastReceiver messageReciever;
 
     public static final String MESSAGE_EVENT = "MESSAGE_EVENT";
     public static final String MESSAGE_KEY = "MESSAGE_EXTRA";
+
+    private int mCurrentSelectedPosition = 0;
+    private boolean mFromSavedInstanceState;
+    private boolean mUserLearnedDrawer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,60 +79,94 @@ public class MainActivity extends ActionBarActivity
             setContentView(R.layout.activity_main);
         }
 
-        messageReciever = new MessageReciever();
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
+                this,
+                drawer,
+                toolbar,
+                R.string.navigation_drawer_open,
+                R.string.navigation_drawer_close
+        );
+        drawer.setDrawerListener(toggle);
+        toggle.syncState();
+
+        messageReciever = new MessageReceiver();
         IntentFilter filter = new IntentFilter(MESSAGE_EVENT);
         LocalBroadcastManager.getInstance(this).registerReceiver(messageReciever,filter);
 
-        navigationDrawerFragment = (NavigationDrawerFragment)
-                getSupportFragmentManager().findFragmentById(R.id.navigation_drawer);
-        title = getTitle();
+        navigationView = (NavigationView) findViewById(R.id.nav_view);
+        navigationView.setNavigationItemSelectedListener(this);
 
-        // Set up the drawer.
-        navigationDrawerFragment.setUp(R.id.navigation_drawer,
-                    (DrawerLayout) findViewById(R.id.drawer_layout));
-    }
+        // Read in the flag indicating whether or not the user has demonstrated awareness of the
+        // drawer. See PREF_USER_LEARNED_DRAWER for details.
+        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this);
+        mUserLearnedDrawer = sp.getBoolean(PREF_USER_LEARNED_DRAWER, false);
 
-    @Override
-    public void onNavigationDrawerItemSelected(int position) {
+        if (null == savedInstanceState) {
+            mCurrentSelectedPosition = getStarFragmentPreference();
 
-        FragmentManager fragmentManager = getSupportFragmentManager();
-        Fragment nextFragment;
-
-        switch (position){
-            default:
-            case 0:
-                nextFragment = new ListOfBooks();
-                break;
-            case 1:
-                nextFragment = new AddBook();
-                break;
-            case 2:
-                nextFragment = new About();
-                break;
-
+        } else {
+            mCurrentSelectedPosition = savedInstanceState.getInt(STATE_SELECTED_POSITION);
+            mFromSavedInstanceState = true;
         }
 
-        fragmentManager.beginTransaction()
-                .replace(R.id.container, nextFragment)
-                .addToBackStack((String) title)
-                .commit();
+        switch (mCurrentSelectedPosition) {
+            case R.id.nav_list:
+                replaceFragment(new ListOfBooks());
+                break;
+            case R.id.nav_scan:
+                replaceFragment(new AddBook());
+                break;
+            case R.id.nav_about:
+                replaceFragment(new About());
+                break;
+        }
     }
 
-    public void setTitle(int titleId) {
-        title = getString(titleId);
+    private int getStarFragmentPreference() {
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+        if (Integer.valueOf(prefs.getString("pref_startFragment", "0")) == 0) {
+            return R.id.nav_list;
+        } else {
+            return R.id.nav_scan;
+        }
+    }
+
+    @SuppressWarnings("StatementWithEmptyBody")
+    @Override
+    public boolean onNavigationItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.nav_list:
+                replaceFragment(new ListOfBooks());
+                break;
+            case R.id.nav_scan:
+                replaceFragment(new AddBook());
+                break;
+            case R.id.nav_about:
+                replaceFragment(new About());
+                break;
+        }
+
+        // Close the navigation drawer menu after item be selected
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        drawer.closeDrawer(GravityCompat.START);
+        return true;
     }
 
     public void restoreActionBar() {
         ActionBar actionBar = getSupportActionBar();
         actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
         actionBar.setDisplayShowTitleEnabled(true);
-        actionBar.setTitle(title);
+
+        // actionBar.setTitle(title);
     }
 
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        if (!navigationDrawerFragment.isDrawerOpen()) {
+        if (!navigationView.isShown()) {
             // Only show items in the action bar relevant to this screen
             // if the drawer is not showing. Otherwise, let the drawer
             // decide what to show in the action bar.
@@ -166,7 +217,7 @@ public class MainActivity extends ActionBarActivity
 
     }
 
-    private class MessageReciever extends BroadcastReceiver {
+    private class MessageReceiver extends BroadcastReceiver {
         @Override
         public void onReceive(Context context, Intent intent) {
             if(intent.getStringExtra(MESSAGE_KEY)!=null){
@@ -191,5 +242,10 @@ public class MainActivity extends ActionBarActivity
             finish();
         }
         super.onBackPressed();
+    }
+
+    private int replaceFragment(Fragment fragment) {
+        final FragmentManager manager = getSupportFragmentManager();
+        return manager.beginTransaction().replace(R.id.container, fragment).commit();
     }
 }

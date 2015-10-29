@@ -17,15 +17,38 @@ package com.jpventura.alexandria;
 
 import android.os.Bundle;
 import android.preference.PreferenceActivity;
+import android.support.v7.widget.Toolbar;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.View.OnClickListener;
+import android.widget.LinearLayout;
 
-/**
- * Created by saj on 27/01/15.
- */
-public class SettingsActivity extends PreferenceActivity {
+public class SettingsActivity extends PreferenceActivity implements OnClickListener {
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         addPreferencesFromResource(R.xml.preferences);
+    }
+
+    @Override
+    public void onClick(View view) {
+        finish();
+    }
+
+    @Override
+    protected void onPostCreate(Bundle savedInstanceState) {
+        super.onPostCreate(savedInstanceState);
+
+        LinearLayout root = (LinearLayout) findViewById(android.R.id.list)
+                .getParent()
+                .getParent()
+                .getParent();
+
+        Toolbar bar = (Toolbar) LayoutInflater.from(this)
+                .inflate(R.layout.settings_toolbar, root, false);
+
+        root.addView(bar, 0);
+        bar.setNavigationOnClickListener(this);
     }
 }
