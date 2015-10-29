@@ -19,14 +19,15 @@ import android.app.Activity;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.LoaderManager;
+import android.support.v4.app.LoaderManager.LoaderCallbacks;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.EditText;
 import android.widget.ListView;
 
@@ -35,7 +36,8 @@ import com.jpventura.alexandria.api.Callback;
 import com.jpventura.alexandria.data.AlexandriaContract;
 
 
-public class ListOfBooks extends Fragment implements LoaderManager.LoaderCallbacks<Cursor> {
+public class ListOfBooks extends Fragment
+        implements LoaderCallbacks<Cursor>, OnClickListener, OnItemClickListener {
 
     private BookListAdapter bookListAdapter;
     private ListView bookList;
@@ -67,31 +69,32 @@ public class ListOfBooks extends Fragment implements LoaderManager.LoaderCallbac
         bookListAdapter = new BookListAdapter(getActivity(), cursor, 0);
         View rootView = inflater.inflate(R.layout.fragment_list_of_books, container, false);
         searchText = (EditText) rootView.findViewById(R.id.searchText);
-        rootView.findViewById(R.id.searchButton).setOnClickListener(
-                new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        ListOfBooks.this.restartLoader();
-                    }
-                }
-        );
+        rootView.findViewById(R.id.searchButton).setOnClickListener(this);
 
         bookList = (ListView) rootView.findViewById(R.id.listOfBooks);
         bookList.setAdapter(bookListAdapter);
-
-        bookList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-
-            @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
-                Cursor cursor = bookListAdapter.getCursor();
-                if (cursor != null && cursor.moveToPosition(position)) {
-                    ((Callback)getActivity())
-                            .onItemSelected(cursor.getString(cursor.getColumnIndex(AlexandriaContract.BookEntry._ID)));
-                }
-            }
-        });
+        bookList.setOnItemClickListener(this);
 
         return rootView;
+    }
+
+    @Override
+    public void onClick(View view) {
+        switch (view.getId()) {
+            case R.id.searchButton:
+                ListOfBooks.this.restartLoader();
+                break;
+        }
+    }
+
+    @Override
+    public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
+        Cursor cursor = bookListAdapter.getCursor();
+
+        if ((null == cursor) || !cursor.moveToPosition(position)) return;
+
+        String ean = cursor.getString(cursor.getColumnIndex(AlexandriaContract.BookEntry._ID));
+        ((Callback) getActivity()).onItemSelected(ean);
     }
 
     private void restartLoader(){
@@ -111,7 +114,7 @@ public class ListOfBooks extends Fragment implements LoaderManager.LoaderCallbac
                     AlexandriaContract.BookEntry.CONTENT_URI,
                     null,
                     selection,
-                    new String[]{searchString,searchString},
+                    new String[]{ searchString, searchString},
                     null
             );
         }

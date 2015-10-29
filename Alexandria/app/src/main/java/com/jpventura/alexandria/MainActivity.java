@@ -34,8 +34,8 @@ import android.widget.Toast;
 
 import com.jpventura.alexandria.api.Callback;
 
-
-public class MainActivity extends ActionBarActivity implements NavigationDrawerFragment.NavigationDrawerCallbacks, Callback {
+public class MainActivity extends ActionBarActivity
+        implements NavigationDrawerFragment.NavigationDrawerCallbacks, Callback {
 
     /**
      * Fragment managing the behaviors, interactions and presentation of the navigation drawer.
@@ -192,6 +192,4 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerF
         }
         super.onBackPressed();
     }
-
-
 }

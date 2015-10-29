@@ -39,7 +39,6 @@ import com.jpventura.alexandria.data.AlexandriaContract;
 import com.jpventura.alexandria.services.BookService;
 import com.jpventura.alexandria.services.DownloadImage;
 
-
 public class AddBook extends Fragment implements LoaderManager.LoaderCallbacks<Cursor> {
     private static final String TAG = "INTENT_TO_SCAN_ACTIVITY";
     private EditText ean;
@@ -51,8 +50,6 @@ public class AddBook extends Fragment implements LoaderManager.LoaderCallbacks<C
 
     private String mScanFormat = "Format:";
     private String mScanContents = "Contents:";
-
-
 
     public AddBook(){
     }
