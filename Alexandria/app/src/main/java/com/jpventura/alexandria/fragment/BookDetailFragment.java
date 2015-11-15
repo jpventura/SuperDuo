@@ -13,14 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.jpventura.alexandria;
+package com.jpventura.alexandria.fragment;
 
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.LoaderManager;
+import android.support.v4.app.LoaderManager.LoaderCallbacks;
 import android.support.v4.content.CursorLoader;
+import android.support.v4.content.Loader;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v7.widget.ShareActionProvider;
 import android.util.Patterns;
@@ -29,15 +30,19 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.jpventura.alexandria.R;
+import com.jpventura.alexandria.activity.MainActivity;
 import com.jpventura.alexandria.data.AlexandriaContract;
 import com.jpventura.alexandria.services.BookService;
 import com.jpventura.alexandria.services.DownloadImage;
 
-public class BookDetail extends Fragment implements LoaderManager.LoaderCallbacks<Cursor> {
+public class BookDetailFragment extends Fragment
+        implements LoaderCallbacks<Cursor>, OnClickListener {
 
     public static final String EAN_KEY = "EAN";
     private final int LOADER_ID = 10;
@@ -46,7 +51,7 @@ public class BookDetail extends Fragment implements LoaderManager.LoaderCallback
     private String bookTitle;
     private ShareActionProvider shareActionProvider;
 
-    public BookDetail(){
+    public BookDetailFragment() {
     }
 
     @Override
@@ -55,27 +60,17 @@ public class BookDetail extends Fragment implements LoaderManager.LoaderCallback
         setHasOptionsMenu(true);
     }
 
-
     @Override
     public View onCreateView(final LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         Bundle arguments = getArguments();
         if (arguments != null) {
-            ean = arguments.getString(BookDetail.EAN_KEY);
+            ean = arguments.getString(BookDetailFragment.EAN_KEY);
             getLoaderManager().restartLoader(LOADER_ID, null, this);
         }
 
         rootView = inflater.inflate(R.layout.fragment_full_book, container, false);
-        rootView.findViewById(R.id.delete_button).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent bookIntent = new Intent(getActivity(), BookService.class);
-                bookIntent.putExtra(BookService.EAN, ean);
-                bookIntent.setAction(BookService.DELETE_BOOK);
-                getActivity().startService(bookIntent);
-                getActivity().getSupportFragmentManager().popBackStack();
-            }
-        });
+        rootView.findViewById(R.id.delete_button).setOnClickListener(this);
         return rootView;
     }
 
@@ -89,7 +84,7 @@ public class BookDetail extends Fragment implements LoaderManager.LoaderCallback
     }
 
     @Override
-    public android.support.v4.content.Loader<Cursor> onCreateLoader(int id, Bundle args) {
+    public Loader<Cursor> onCreateLoader(int id, Bundle args) {
         return new CursorLoader(
                 getActivity(),
                 AlexandriaContract.BookEntry.buildFullBookUri(Long.parseLong(ean)),
@@ -148,8 +143,21 @@ public class BookDetail extends Fragment implements LoaderManager.LoaderCallback
     @Override
     public void onPause() {
         super.onDestroyView();
-        if(MainActivity.IS_TABLET && rootView.findViewById(R.id.right_container)==null){
+        if (MainActivity.IS_TABLET && rootView.findViewById(R.id.right_container) == null) {
             getActivity().getSupportFragmentManager().popBackStack();
+        }
+    }
+
+    @Override
+    public void onClick(View button) {
+        switch (button.getId()) {
+            case R.id.delete_button:
+                Intent bookIntent = new Intent(getActivity(), BookService.class);
+                bookIntent.putExtra(BookService.EAN, ean);
+                bookIntent.setAction(BookService.DELETE_BOOK);
+                getActivity().startService(bookIntent);
+                getActivity().getSupportFragmentManager().popBackStack();
+                break;
         }
     }
 }

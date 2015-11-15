@@ -54,14 +54,13 @@ android {
     buildTypes {
         debug{
             testCoverageEnabled = true
-	    signingConfig signingConfigs.debug
+            signingConfig signingConfigs.debug
         }
-	release {
+        release {
             testCoverageEnabled = true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-	    signingConfig signingConfigs.release
-	}
-
+            signingConfig signingConfigs.release
+        }
     }
 
     lintOptions {

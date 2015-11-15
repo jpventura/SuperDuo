@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.jpventura.alexandria;
+package com.jpventura.alexandria.activity;
 
 import android.os.Bundle;
 import android.preference.PreferenceActivity;
@@ -22,6 +22,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.LinearLayout;
+
+import com.jpventura.alexandria.R;
 
 public class SettingsActivity extends PreferenceActivity implements OnClickListener {
 

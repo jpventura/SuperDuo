@@ -13,9 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.jpventura.alexandria;
+package com.jpventura.alexandria.fragment;
 
-import android.app.Activity;
+import android.content.Context;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -31,12 +31,12 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.EditText;
 import android.widget.ListView;
 
+import com.jpventura.alexandria.R;
 import com.jpventura.alexandria.api.BookListAdapter;
 import com.jpventura.alexandria.api.Callback;
 import com.jpventura.alexandria.data.AlexandriaContract;
 
-
-public class ListOfBooks extends Fragment
+public class ListOfBooksFragment extends Fragment
         implements LoaderCallbacks<Cursor>, OnClickListener, OnItemClickListener {
 
     private BookListAdapter bookListAdapter;
@@ -46,7 +46,7 @@ public class ListOfBooks extends Fragment
 
     private final int LOADER_ID = 10;
 
-    public ListOfBooks() {
+    public ListOfBooksFragment() {
     }
 
     @Override
@@ -82,7 +82,7 @@ public class ListOfBooks extends Fragment
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.searchButton:
-                ListOfBooks.this.restartLoader();
+                ListOfBooksFragment.this.restartLoader();
                 break;
         }
     }
@@ -143,8 +143,8 @@ public class ListOfBooks extends Fragment
     }
 
     @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
-        activity.setTitle(R.string.books);
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        getActivity().setTitle(R.string.books);
     }
 }

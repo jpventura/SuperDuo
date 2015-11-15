@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.jpventura.alexandria;
+package com.jpventura.alexandria.activity;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -39,7 +39,12 @@ import android.view.View;
 import android.support.design.widget.NavigationView.OnNavigationItemSelectedListener;
 import android.widget.Toast;
 
+import com.jpventura.alexandria.About;
+import com.jpventura.alexandria.R;
 import com.jpventura.alexandria.api.Callback;
+import com.jpventura.alexandria.fragment.AddBookFragment;
+import com.jpventura.alexandria.fragment.BookDetailFragment;
+import com.jpventura.alexandria.fragment.ListOfBooksFragment;
 
 public class MainActivity extends AppCompatActivity
         implements Callback, OnNavigationItemSelectedListener {
@@ -114,10 +119,10 @@ public class MainActivity extends AppCompatActivity
 
         switch (mCurrentSelectedPosition) {
             case R.id.nav_list:
-                replaceFragment(new ListOfBooks());
+                replaceFragment(new ListOfBooksFragment());
                 break;
             case R.id.nav_scan:
-                replaceFragment(new AddBook());
+                replaceFragment(new AddBookFragment());
                 break;
             case R.id.nav_about:
                 replaceFragment(new About());
@@ -139,10 +144,10 @@ public class MainActivity extends AppCompatActivity
     public boolean onNavigationItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.nav_list:
-                replaceFragment(new ListOfBooks());
+                replaceFragment(new ListOfBooksFragment());
                 break;
             case R.id.nav_scan:
-                replaceFragment(new AddBook());
+                replaceFragment(new AddBookFragment());
                 break;
             case R.id.nav_about:
                 replaceFragment(new About());
@@ -201,9 +206,9 @@ public class MainActivity extends AppCompatActivity
     @Override
     public void onItemSelected(String ean) {
         Bundle args = new Bundle();
-        args.putString(BookDetail.EAN_KEY, ean);
+        args.putString(BookDetailFragment.EAN_KEY, ean);
 
-        BookDetail fragment = new BookDetail();
+        BookDetailFragment fragment = new BookDetailFragment();
         fragment.setArguments(args);
 
         int id = R.id.container;

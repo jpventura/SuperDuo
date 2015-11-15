@@ -34,7 +34,7 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
-import com.jpventura.alexandria.MainActivity;
+import com.jpventura.alexandria.activity.MainActivity;
 import com.jpventura.alexandria.R;
 import com.jpventura.alexandria.data.AlexandriaContract;
 

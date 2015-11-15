@@ -13,10 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.jpventura.alexandria;
+package com.jpventura.alexandria.fragment;
 
+import android.content.Context;
 import android.support.v7.app.ActionBarActivity;
-import android.app.Activity;
 import android.support.v7.app.ActionBar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.ActionBarDrawerToggle;
@@ -26,7 +26,6 @@ import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -36,6 +35,8 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+
+import com.jpventura.alexandria.R;
 
 /**
  * Fragment used for managing interactions for and presentation of a navigation drawer.
@@ -231,10 +232,10 @@ public class NavigationDrawerFragment extends Fragment {
     }
 
     @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
+    public void onAttach(Context context) {
+        super.onAttach(context);
         try {
-            mCallbacks = (NavigationDrawerCallbacks) activity;
+            mCallbacks = (NavigationDrawerCallbacks) getActivity();
         } catch (ClassCastException e) {
             throw new ClassCastException("Activity must implement NavigationDrawerCallbacks.");
         }
