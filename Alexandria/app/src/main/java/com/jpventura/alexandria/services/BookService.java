@@ -213,6 +213,10 @@ public class BookService extends IntentService {
 
         } catch (JSONException e) {
             Log.e(LOG_TAG, "Error ", e);
+        } catch (NullPointerException e) {
+            Intent messageIntent = new Intent(MainActivity.MESSAGE_EVENT);
+            messageIntent.putExtra(MainActivity.MESSAGE_KEY,getResources().getString(R.string.not_connected));
+            LocalBroadcastManager.getInstance(getApplicationContext()).sendBroadcast(messageIntent);
         }
     }
 

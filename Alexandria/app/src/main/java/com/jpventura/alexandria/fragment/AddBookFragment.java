@@ -33,9 +33,9 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
-
+import com.google.zxing.integration.android.IntentIntegrator;
+import com.google.zxing.integration.android.IntentResult;
 import com.jpventura.alexandria.R;
 import com.jpventura.alexandria.data.AlexandriaContract;
 import com.jpventura.alexandria.services.BookService;
@@ -80,6 +80,16 @@ public class AddBookFragment extends Fragment
     public void onAttach(Context context) {
         super.onAttach(context);
         getActivity().setTitle(R.string.scan);
+    }
+
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        switch (requestCode) {
+            case IntentIntegrator.REQUEST_CODE:
+                onScanResult(requestCode, resultCode, data);
+                break;
+            default:
+                super.onActivityResult(requestCode, resultCode, data);
+        }
     }
 
     @Override
@@ -140,24 +150,13 @@ public class AddBookFragment extends Fragment
 
     @Override
     public void onLoaderReset(android.support.v4.content.Loader<Cursor> loader) {
-
     }
 
     @Override
     public void onClick(View button) {
         switch (button.getId()) {
             case R.id.scan_button:
-                // This is the callback method that the system will invoke when your button is
-                // clicked. You might do this by launching another app or by including the
-                //functionality directly in this app.
-                // Hint: Use a Try/Catch block to handle the Intent dispatch gracefully, if you
-                // are using an external app.
-                //when you're done, remove the toast below.
-                CharSequence text = "This button should let you scan a book for its barcode!";
-                int duration = Toast.LENGTH_SHORT;
-
-                Toast toast = Toast.makeText(getActivity(), text, duration);
-                toast.show();
+                IntentIntegrator.forSupportFragment(this).initiateScan();
                 break;
             case R.id.save_button:
                 ean.setText("");
@@ -209,5 +208,13 @@ public class AddBookFragment extends Fragment
         rootView.findViewById(R.id.bookCover).setVisibility(View.INVISIBLE);
         rootView.findViewById(R.id.save_button).setVisibility(View.INVISIBLE);
         rootView.findViewById(R.id.delete_button).setVisibility(View.INVISIBLE);
+    }
+
+    private void onScanResult(int requestCode, int resultCode, Intent data) {
+        IntentResult result = IntentIntegrator.parseActivityResult(requestCode, resultCode, data);
+
+        if (null == result) return;
+
+        ean.setText(result.getContents() + "");
     }
 }

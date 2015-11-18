@@ -17,6 +17,7 @@ package com.jpventura.alexandria.api;
 
 import android.content.Context;
 import android.database.Cursor;
+import android.os.AsyncTask;
 import android.support.v4.widget.CursorAdapter;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -41,7 +42,7 @@ public class BookListAdapter extends CursorAdapter {
         ViewHolder viewHolder = (ViewHolder) view.getTag();
 
         String imgUrl = cursor.getString(cursor.getColumnIndex(AlexandriaContract.BookEntry.IMAGE_URL));
-        new DownloadImage(viewHolder.bookCover).execute(imgUrl);
+        new DownloadImage(viewHolder.bookCover).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, imgUrl);
 
         String bookTitle = cursor.getString(cursor.getColumnIndex(AlexandriaContract.BookEntry.TITLE));
         viewHolder.bookTitle.setText(bookTitle);
