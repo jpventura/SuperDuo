@@ -26,7 +26,7 @@
             android:authorities="com.jpventura.footballscores" />
 
         <activity
-            android:name=".AboutActivity"
+            android:name=".app.AboutActivity"
             android:label="About"
             android:parentActivityName=".MainActivity" >
             <meta-data

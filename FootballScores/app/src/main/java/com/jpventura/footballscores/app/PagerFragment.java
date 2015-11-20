@@ -1,4 +1,4 @@
-package com.jpventura.footballscores;
+package com.jpventura.footballscores.app;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -11,6 +11,10 @@ import android.text.format.Time;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
+import com.jpventura.footballscores.MainActivity;
+import com.jpventura.footballscores.R;
+import com.jpventura.footballscores.app.MainScreenFragment;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
