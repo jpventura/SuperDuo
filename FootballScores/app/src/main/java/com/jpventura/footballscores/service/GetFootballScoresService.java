@@ -1,3 +1,18 @@
+/*
+ * Copyright 2015 Joao Paulo Fernandes Ventura.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package com.jpventura.footballscores.service;
 
 import android.app.IntentService;
@@ -22,31 +37,25 @@ import java.util.Date;
 import java.util.TimeZone;
 import java.util.Vector;
 
-import com.jpventura.footballscores.DatabaseContract;
+import com.jpventura.footballscores.content.DatabaseContract;
 import com.jpventura.footballscores.R;
 
-/**
- * Created by yehya khaled on 3/2/2015.
- */
-public class myFetchService extends IntentService
-{
-    public static final String LOG_TAG = "myFetchService";
-    public myFetchService()
-    {
-        super("myFetchService");
+public class GetFootballScoresService extends IntentService {
+    public static final String LOG_TAG = GetFootballScoresService.class.getSimpleName();
+
+    public GetFootballScoresService() {
+        super("GetFootballScoresService");
     }
 
     @Override
-    protected void onHandleIntent(Intent intent)
-    {
+    protected void onHandleIntent(Intent intent) {
         getData("n2");
         getData("p2");
 
         return;
     }
 
-    private void getData (String timeFrame)
-    {
+    private void getData (String timeFrame) {
         //Creating fetch URL
         final String BASE_URL = "http://api.football-data.org/alpha/fixtures"; //Base URL
         final String QUERY_TIME_FRAME = "timeFrame"; //Time Frame parameter to determine days
@@ -87,27 +96,21 @@ public class myFetchService extends IntentService
                 return;
             }
             JSON_data = buffer.toString();
-        }
-        catch (Exception e)
-        {
+        } catch (Exception e) {
             Log.e(LOG_TAG,"Exception here" + e.getMessage());
-        }
-        finally {
-            if(m_connection != null)
-            {
+        } finally {
+            if(m_connection != null) {
                 m_connection.disconnect();
             }
-            if (reader != null)
-            {
+            if (reader != null) {
                 try {
                     reader.close();
-                }
-                catch (IOException e)
-                {
+                } catch (IOException e) {
                     Log.e(LOG_TAG,"Error Closing Stream");
                 }
             }
         }
+
         try {
             if (JSON_data != null) {
                 //This bit is to check if the data contains any matches. If not, we call processJson on the dummy data
@@ -125,14 +128,12 @@ public class myFetchService extends IntentService
                 //Could not Connect
                 Log.d(LOG_TAG, "Could not connect to server.");
             }
-        }
-        catch(Exception e)
-        {
+        } catch(Exception e) {
             Log.e(LOG_TAG,e.getMessage());
         }
     }
-    private void processJSONdata (String JSONdata,Context mContext, boolean isReal)
-    {
+
+    private void processJSONdata(String JSONdata,Context mContext, boolean isReal) {
         //JSON data
         // This set of league codes is for the 2015/2016 season. In fall of 2016, they will need to
         // be updated. Feel free to use the codes
@@ -181,8 +182,7 @@ public class myFetchService extends IntentService
 
             //ContentValues to be inserted
             Vector<ContentValues> values = new Vector <ContentValues> (matches.length());
-            for(int i = 0;i < matches.length();i++)
-            {
+            for(int i = 0;i < matches.length();i++) {
 
                 JSONObject match_data = matches.getJSONObject(i);
                 League = match_data.getJSONObject(LINKS).getJSONObject(SOCCER_SEASON).
@@ -225,9 +225,7 @@ public class myFetchService extends IntentService
                             SimpleDateFormat mformat = new SimpleDateFormat("yyyy-MM-dd");
                             mDate=mformat.format(fragmentdate);
                         }
-                    }
-                    catch (Exception e)
-                    {
+                    } catch (Exception e) {
                         Log.d(LOG_TAG, "error here!");
                         Log.e(LOG_TAG,e.getMessage());
                     }
@@ -248,7 +246,7 @@ public class myFetchService extends IntentService
                     match_values.put(DatabaseContract.scores_table.MATCH_DAY,match_day);
                     //log spam
 
-                    //Log.v(LOG_TAG,match_id);
+                    //Log.v(LOG_TAG,matchId);
                     //Log.v(LOG_TAG,mDate);
                     //Log.v(LOG_TAG,mTime);
                     //Log.v(LOG_TAG,Home);
@@ -266,12 +264,8 @@ public class myFetchService extends IntentService
                     DatabaseContract.BASE_CONTENT_URI,insert_data);
 
             //Log.v(LOG_TAG,"Succesfully Inserted : " + String.valueOf(inserted_data));
-        }
-        catch (JSONException e)
-        {
+        } catch (JSONException e) {
             Log.e(LOG_TAG,e.getMessage());
         }
-
     }
 }
-
