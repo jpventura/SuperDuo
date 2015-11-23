@@ -107,7 +107,7 @@ public class GetFootballScoresService extends IntentService {
             }
             JSON_data = buffer.toString();
         } catch (Exception e) {
-            Log.e(LOG_TAG,"Exception here" + e.getMessage());
+            Log.e(LOG_TAG,"Exception here: " + e.getMessage());
         } finally {
             if(m_connection != null) {
                 m_connection.disconnect();
@@ -123,6 +123,8 @@ public class GetFootballScoresService extends IntentService {
 
         try {
             if (JSON_data != null) {
+                Log.e("ventura", "json " + JSON_data);
+
                 //This bit is to check if the data contains any matches. If not, we call processJson on the dummy data
                 JSONArray matches = new JSONObject(JSON_data).getJSONArray("fixtures");
                 if (matches.length() == 0) {

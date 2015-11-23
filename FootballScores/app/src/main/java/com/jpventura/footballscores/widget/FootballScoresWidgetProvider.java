@@ -1,5 +1,5 @@
 /*
- * Copyright 2015 Udacity, Inc.
+ * Copyright 2015 Joao Paulo Fernandes Ventura.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -25,22 +25,18 @@ import android.widget.RemoteViews;
 import com.jpventura.footballscores.R;
 import com.jpventura.footballscores.app.MainActivity;
 
-public class FootballScoresWidget extends AppWidgetProvider {
+public class FootballScoresWidgetProvider extends AppWidgetProvider {
     @Override
     public void onUpdate(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds) {
-//        for (int id : appWidgetIds) {
-//            String packageName = context.getPackageName();
-//            RemoteViews remoteViews = new RemoteViews(packageName, R.layout.widget_football_scores);
-//
-//            Intent intent = new Intent(context, MainActivity.class);
-//            PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, intent, 0);
-//            views.setOnClickPendingIntent(R.id.widget, pendingIntent);
-//
-//            views.setRemoteAdapter(R.id.scores_list, new Intent(context, ScoresWidgetRemoteViewsService.class));
-//            views.setEmptyView(R.id.scores_list, R.id.scores_empty);
-//
-//            appWidgetManager.updateAppWidget(appWidgetId, views);
-//        }
-        super.onUpdate(context, appWidgetManager, appWidgetIds);
+        for (int appWidgetId : appWidgetIds) {
+            String packageName = context.getPackageName();
+            RemoteViews views = new RemoteViews(packageName, R.layout.widget_football_scores);
+
+            Intent launchIntent = new Intent(context, MainActivity.class);
+            PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, launchIntent, 0);
+            views.setOnClickPendingIntent(R.id.widget, pendingIntent);
+
+            appWidgetManager.updateAppWidget(appWidgetId, views);
+        }
     }
 }
