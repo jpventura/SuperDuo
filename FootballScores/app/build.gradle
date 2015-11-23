@@ -31,13 +31,13 @@ android {
         debug {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-            resValue "string", "api_key", "YOUR API KEY"
+            resValue "string", "api_key", "bdac89512bec4c8bbec120e734000213"
             signingConfig signingConfigs.debug
         }
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-            resValue "string", "api_key", "YOUR API KEY"
+            resValue "string", "api_key", "bdac89512bec4c8bbec120e734000213"
             signingConfig signingConfigs.release
         }
     }
