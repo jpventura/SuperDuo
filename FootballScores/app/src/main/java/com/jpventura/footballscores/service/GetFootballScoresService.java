@@ -39,6 +39,9 @@ import java.util.Vector;
 
 import com.jpventura.footballscores.content.DatabaseContract;
 import com.jpventura.footballscores.R;
+import com.jpventura.footballscores.endpoint.Endpoint;
+import com.jpventura.footballscores.endpoint.Fixture;
+import com.jpventura.footballscores.endpoint.IEndpoint;
 
 public class GetFootballScoresService extends IntentService {
     public static final String LOG_TAG = GetFootballScoresService.class.getSimpleName();
@@ -52,10 +55,17 @@ public class GetFootballScoresService extends IntentService {
         getData("n2");
         getData("p2");
 
+
         return;
     }
 
     private void getData (String timeFrame) {
+        IEndpoint endpoint = Endpoint.getInstance(getString(R.string.api_key));
+
+        for (Fixture fixture : endpoint.getFixtures(timeFrame).fixtures) {
+            Log.e("ventura", fixture.toString());
+        }
+
         //Creating fetch URL
         final String BASE_URL = "http://api.football-data.org/alpha/fixtures"; //Base URL
         final String QUERY_TIME_FRAME = "timeFrame"; //Time Frame parameter to determine days
@@ -267,5 +277,21 @@ public class GetFootballScoresService extends IntentService {
         } catch (JSONException e) {
             Log.e(LOG_TAG,e.getMessage());
         }
+    }
+
+    private static ContentValues contentValuesFromFixture(Fixture fixture) {
+        ContentValues values = new ContentValues();
+
+        values.put(DatabaseContract.scores_table.MATCH_ID, fixture.getMatchId());
+        values.put(DatabaseContract.scores_table.DATE_COL, fixture.getDate());
+        values.put(DatabaseContract.scores_table.TIME_COL, fixture.getTime());
+        values.put(DatabaseContract.scores_table.HOME_COL, fixture.homeTeamName);
+        values.put(DatabaseContract.scores_table.AWAY_COL, fixture.awayTeamName);
+        values.put(DatabaseContract.scores_table.HOME_GOALS_COL, fixture.result.goalsHomeTeam);
+        values.put(DatabaseContract.scores_table.AWAY_GOALS_COL, fixture.result.goalsAwayTeam);
+        values.put(DatabaseContract.scores_table.LEAGUE_COL, fixture.getLeague());
+        values.put(DatabaseContract.scores_table.MATCH_DAY, fixture.matchday);
+
+        return values;
     }
 }
