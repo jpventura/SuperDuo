@@ -23,14 +23,12 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager.LoaderCallbacks;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
-import android.widget.TextView;
 
 import com.jpventura.footballscores.content.DatabaseContract;
 import com.jpventura.footballscores.R;
@@ -88,7 +86,6 @@ public class MainScreenFragment extends Fragment
 
     @Override
     public void onItemShare(String item) {
-        Log.e("ventura", item);
     }
 
     private void update_scores() {
