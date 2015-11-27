@@ -1,29 +1,41 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    >
 
     <LinearLayout
         android:id="@+id/widget"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:padding="4dp">
+        android:background="@android:color/holo_red_light"
+        android:orientation="vertical">
+
+    </LinearLayout>
+    <!--<LinearLayout-->
+        <!--android:id="@+id/widget"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="match_parent"-->
+        <!--android:orientation="vertical"-->
+        <!--android:padding="4dp">-->
 
         <ImageView
             android:id="@+id/widget_icon"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_gravity="center_horizontal"
-            android:layout_weight="1" />
-
-        <TextView
-            android:id="@+id/widget_high_temperature"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:minHeight="40dp"
+            android:minWidth="40dp"
             android:layout_gravity="center_horizontal"
-            android:fontFamily="sans-serif"
-            android:textAppearance="?android:textAppearanceLarge"
-            tools:text="48" />
-    </LinearLayout>
+            android:background="@android:color/holo_blue_light"
+            android:layout_weight="1" />
+
+        <!--<TextView-->
+            <!--android:id="@+id/widget_high_temperature"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_gravity="center_horizontal"-->
+            <!--android:fontFamily="sans-serif"-->
+            <!--android:textAppearance="?android:textAppearanceLarge"-->
+            <!--tools:text="48" />-->
+    <!--</LinearLayout>-->
 </FrameLayout>

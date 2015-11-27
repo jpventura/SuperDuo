@@ -34,7 +34,7 @@
 
         <service android:name=".service.GetFootballScoresService" />
 
-        <receiver android:name=".widget.FootballScoresWidgetProvider"
+        <receiver android:name=".widget.ScoresWidgetProvider"
             android:label="@string/title_widget">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />

@@ -25,18 +25,22 @@ import android.widget.RemoteViews;
 import com.jpventura.footballscores.R;
 import com.jpventura.footballscores.app.MainActivity;
 
-public class FootballScoresWidgetProvider extends AppWidgetProvider {
+public class ScoresWidgetProvider extends AppWidgetProvider {
+    @Override
+    public void onReceive(Context context, Intent intent) {
+        super.onReceive(context, intent);
+    }
+
     @Override
     public void onUpdate(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds) {
-        for (int appWidgetId : appWidgetIds) {
+        for (int id : appWidgetIds) {
             String packageName = context.getPackageName();
             RemoteViews views = new RemoteViews(packageName, R.layout.widget_football_scores);
 
             Intent launchIntent = new Intent(context, MainActivity.class);
             PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, launchIntent, 0);
             views.setOnClickPendingIntent(R.id.widget, pendingIntent);
-
-            appWidgetManager.updateAppWidget(appWidgetId, views);
+            appWidgetManager.updateAppWidget(id, views);
         }
     }
 }
