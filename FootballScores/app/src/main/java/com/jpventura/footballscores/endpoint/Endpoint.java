@@ -6,23 +6,23 @@ import com.jpventura.footballscores.BuildConfig;
 
 import java.util.Date;
 
-import retrofit.RequestInterceptor;
 import retrofit.RestAdapter;
 import retrofit.RestAdapter.LogLevel;
 import retrofit.converter.GsonConverter;
+import retrofit.http.Header;
+import retrofit.http.Path;
 import retrofit.http.Query;
 
-public class Endpoint implements IEndpoint, RequestInterceptor {
+public class Endpoint implements IEndpoint{
     private static IEndpoint sEndpoint;
     private static final Object lock = new Object();
 
-    private String mApiKey;
     private IEndpoint mEndpoint;
 
-    public static IEndpoint getInstance(String apiKey) {
+    public static IEndpoint getInstance() {
         synchronized (lock) {
             if (null == sEndpoint) {
-                sEndpoint = new Endpoint(apiKey);
+                sEndpoint = new Endpoint();
             }
         }
 
@@ -30,18 +30,16 @@ public class Endpoint implements IEndpoint, RequestInterceptor {
     }
 
     @Override
-    public void intercept(RequestFacade request) {
-        request.addHeader("X-Auth-Token", mApiKey);
+    public ResultPage<Fixture> getFixtures(@Header("X-Auth-Token") String authToken, @Query("timeFrame") String timeFrame) {
+        return mEndpoint.getFixtures(authToken, timeFrame);
     }
 
     @Override
-    public ResultPage<Fixture> getFixtures(@Query("timeFrame") String timeFrame) {
-        return mEndpoint.getFixtures(timeFrame);
+    public Team getTeam(@Header("X-Auth-Token") String authToken, @Path("id") String id) {
+        return mEndpoint.getTeam(authToken, id);
     }
 
-    private Endpoint(String apiKey) {
-        mApiKey = apiKey;
-
+    private Endpoint() {
         Gson gson = new GsonBuilder()
                 .registerTypeAdapter(Date.class, new DateDeserializer())
                 .create();

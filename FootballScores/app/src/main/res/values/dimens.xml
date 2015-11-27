@@ -10,4 +10,7 @@
 
     <dimen name="widget_min_height">40dp</dimen>
     <dimen name="widget_min_width">40dp</dimen>
+
+    <dimen name="crest_height">48dp</dimen>
+    <dimen name="crest_width">48dp</dimen>
 </resources>

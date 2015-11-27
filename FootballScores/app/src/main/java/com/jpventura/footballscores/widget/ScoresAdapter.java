@@ -18,17 +18,28 @@ package com.jpventura.footballscores.widget;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
+import android.graphics.drawable.PictureDrawable;
+import android.net.Uri;
 import android.support.v4.widget.CursorAdapter;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.GenericRequestBuilder;
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.load.model.StreamEncoder;
+import com.bumptech.glide.load.resource.file.FileToStreamDecoder;
+import com.caverock.androidsvg.SVG;
 import com.jpventura.footballscores.R;
 import com.jpventura.footballscores.Utility;
 import com.jpventura.footballscores.app.OnItemShareListener;
+
+import java.io.InputStream;
 
 /**
  * Created by yehya khaled on 2/26/2015.
@@ -44,6 +55,10 @@ public class ScoresAdapter extends CursorAdapter implements OnClickListener {
     public static final int COL_ID = 8;
     public static final int COL_MATCHTIME = 2;
     public double detail_match_id = 0;
+
+    private static final Object lock = new Object();
+    private static GenericRequestBuilder sRequestBuilder;
+
     private String FOOTBALL_SCORES_HASHTAG = "#Football_Scores";
     private OnItemShareListener mOnItemShareListener;
 
@@ -68,11 +83,13 @@ public class ScoresAdapter extends CursorAdapter implements OnClickListener {
         mHolder.date.setText(cursor.getString(COL_MATCHTIME));
         mHolder.score.setText(Utility.getScores(cursor.getInt(COL_HOME_GOALS), cursor.getInt(COL_AWAY_GOALS)));
         mHolder.matchId = cursor.getDouble(COL_ID);
-        mHolder.homeCrest.setImageResource(Utility.getTeamCrestByTeamName(
-                cursor.getString(COL_HOME)));
-        mHolder.awayCrest.setImageResource(Utility.getTeamCrestByTeamName(
-                cursor.getString(COL_AWAY)
-        ));
+
+        String homeCrestUrl = cursor.getString(cursor.getColumnIndex("home_crest_url"));
+        loadImageInto(context, homeCrestUrl, mHolder.homeCrest);
+
+        String awayCrestUrl = cursor.getString(cursor.getColumnIndex("away_crest_url"));
+        loadImageInto(context, awayCrestUrl, mHolder.awayCrest);
+
         //Log.v(FetchScoreTask.LOG_TAG,mHolder.homeName.getText() + " Vs. " + mHolder.awayName.getText() +" id " + String.valueOf(mHolder.matchId));
         //Log.v(FetchScoreTask.LOG_TAG,String.valueOf(detail_match_id));
         LayoutInflater vi = (LayoutInflater) context.getApplicationContext()
@@ -122,4 +139,33 @@ public class ScoresAdapter extends CursorAdapter implements OnClickListener {
         shareIntent.putExtra(Intent.EXTRA_TEXT, ShareText + FOOTBALL_SCORES_HASHTAG);
         return shareIntent;
     }
+
+    private static void loadImageInto(Context context, String crestUrl, ImageView imageView) {
+        synchronized (lock) {
+            if (null == sRequestBuilder) {
+                sRequestBuilder = Glide.with(context)
+                        .using(Glide.buildStreamModelLoader(Uri.class, context), InputStream.class)
+                        .from(Uri.class)
+                        .as(SVG.class)
+                        .transcode(new SVGTranscoder(), PictureDrawable.class)
+                        .sourceEncoder(new StreamEncoder())
+                        .cacheDecoder(new FileToStreamDecoder<>(new SVGDecoder()))
+                        .decoder(new SVGDecoder())
+                        .error(R.drawable.ic_launcher)
+                        .listener(new DrawableRequestListener());
+            }
+        }
+
+        try {
+            sRequestBuilder.diskCacheStrategy(DiskCacheStrategy.SOURCE)
+                    .load(Uri.parse(crestUrl))
+                    .placeholder(R.drawable.ic_launcher)
+                    .into(imageView);
+        } catch (ClassCastException e) {
+            e.printStackTrace();
+        } catch (NullPointerException e) {
+            e.printStackTrace();
+        }
+    }
 }
+

@@ -10,6 +10,7 @@ import java.util.TimeZone;
 public class Fixture {
     public static final String FIXTURES = IEndpoint.BASE_URL + "/fixtures/";
     public static final String SOCCER_SEASON = IEndpoint.BASE_URL + "/soccerseasons/";
+    public static final String TEAM = IEndpoint.BASE_URL + "/teams/";
 
     public Map<String, Link> _links;
 
@@ -25,14 +26,22 @@ public class Fixture {
 
     public Integer matchday;
 
+    public String getAwayTeamId() {
+        return _links.get("awayTeam").href.replace(TEAM, "");
+    }
+
     public String getDate() {
         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
         format.setTimeZone(TimeZone.getDefault());
         return format.format(date);
     }
 
-    public String getLeague() {
+    public String getLeagueId() {
         return _links.get("soccerseason").href.replace(SOCCER_SEASON, "");
+    }
+
+    public String getHomeTeamId() {
+        return _links.get("homeTeam").href.replace(TEAM, "");
     }
 
     public String getMatchId() {

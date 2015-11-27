@@ -31,9 +31,9 @@ public class Utility {
             } else if(match_day == 7 || match_day == 8) {
                 return "First Knockout round";
             } else if(match_day == 9 || match_day == 10) {
-                return "QuarterFinal";
+                return "Quarter Final";
             } else if(match_day == 11 || match_day == 12) {
-                return "SemiFinal";
+                return "Semi Final";
             } else {
                 return "Final";
             }
@@ -42,50 +42,11 @@ public class Utility {
         }
     }
 
-    public static String getScores(int home_goals,int awaygoals) {
-        if(home_goals < 0 || awaygoals < 0) {
+    public static String getScores(int homeGoals, int awayGoals) {
+        if(homeGoals < 0 || awayGoals < 0) {
             return " - ";
         } else {
-            return String.valueOf(home_goals) + " - " + String.valueOf(awaygoals);
-        }
-    }
-
-    public static int getTeamCrestByTeamName (String teamName) {
-        if (null == teamName) return R.drawable.ic_launcher;
-
-        /*
-         * FIXME Is Udacity code intentionally so bad?
-         *
-         * Hardcoding the team crests using a switch statement instead of downloading
-         * them from the internet is stupid.
-         *
-         * I really would like to know if this constructs were intentionally badly written so the
-         * student would have to refactor a lot of code that are irrelevant to the project rubric.
-         * And the code is totally not according to Google nor Udacity Style Guide.
-         */
-        switch (teamName) {
-            case "Arsenal London FC":
-                return R.drawable.arsenal;
-            case "Manchester United FC":
-                return R.drawable.manchester_united;
-            case "Swansea City":
-                return R.drawable.swansea_city_afc;
-            case "Leicester City":
-                return R.drawable.leicester_city_fc_hd_logo;
-            case "Everton FC":
-                return R.drawable.everton_fc_logo1;
-            case "West Ham United FC":
-                return R.drawable.west_ham;
-            case "Tottenham Hotspur FC":
-                return R.drawable.tottenham_hotspur;
-            case "West Bromwich Albion":
-                return R.drawable.west_bromwich_albion_hd_logo;
-            case "Sunderland AFC":
-                return R.drawable.sunderland;
-            case "Stoke City FC":
-                return R.drawable.stoke_city;
-            default:
-                return R.drawable.ic_launcher;
+            return String.valueOf(homeGoals) + " - " + String.valueOf(awayGoals);
         }
     }
 }

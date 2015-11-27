@@ -34,6 +34,8 @@ public class DatabaseContract {
         public static final String AWAY_COL = "away";
         public static final String HOME_GOALS_COL = "home_goals";
         public static final String AWAY_GOALS_COL = "away_goals";
+        public static final String HOME_CREST_URL_COL = "home_crest_url";
+        public static final String AWAY_CREST_URL_COL = "away_crest_url";
         public static final String MATCH_ID = "matchId";
         public static final String MATCH_DAY = "match_day";
 
